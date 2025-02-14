@@ -1,0 +1,3 @@
+[submodule "odns-api"]
+	path = odns-api
+	url = https://github.com/netd-tud/odns-api.git
