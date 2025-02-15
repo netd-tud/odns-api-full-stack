@@ -1,3 +1,6 @@
 [submodule "odns-api"]
 	path = odns-api
 	url = https://github.com/netd-tud/odns-api.git
+[submodule "odns-dataimporter"]
+	path = odns-dataimporter
+	url = https://github.com/netd-tud/odns-dataimporter.git
