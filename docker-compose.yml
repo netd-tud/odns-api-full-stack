@@ -23,9 +23,6 @@ services:
       # use odnsapi.prod.conf for ssl and domain name
       - ./nginx/odnsapi.dev.conf:/etc/nginx/conf.d/odnsapi.conf:ro
     restart: always
-    depends_on:
-      dotnet_app:
-        condition: service_started
     networks:
       - frontend_network
       - odnsapi_network
@@ -38,9 +35,9 @@ services:
     develop:
       watch:
         - path: ./html
-          action: rebuild 
+          action: restart 
         - path: ./nginx
-          action: rebuild
+          action: restart
   
   # Dotnet ODNS-API application
   dotnet_app:
