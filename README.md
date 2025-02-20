@@ -1,5 +1,10 @@
 # ODNS-API Full Stack Deployment
 This repository contains the full deployment stack for the ODNS-API.
+This repository contains submodules (!), use
+
+`git clone --recursive https://github.com/netd-tud/odns-api-full-stack.git`
+
+to also clone the submodules, otherwise it won't work without further steps.
 
 ## Network Structure
 ![Overview of network structure](./img/odns-api-deployment.png)
