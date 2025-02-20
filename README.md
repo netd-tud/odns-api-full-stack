@@ -10,8 +10,9 @@ to also clone the submodules, otherwise it won't work without further steps.
 ![Overview of network structure](./img/odns-api-deployment.png)
 
 ## Setup
-Run 
-`sudo docker compose up`
+1. Clone repository
+2. Rename `.env.template` into `.env` and add proper values
+3. Run `sudo docker compose up`
 
 ## Teardown
 There is a teardown script which you can run with
