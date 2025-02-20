@@ -23,11 +23,23 @@ services:
       - ./nginx/odnsapi.conf:/etc/nginx/conf.d/odnsapi.conf:ro
     restart: always
     depends_on:
-      - dotnet_app
+      dotnet_app:
+        condition: service_started
     networks:
       - frontend_network
       - odnsapi_network
       - postgresdb_network
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 30s
+      retries: 3
+      start_period: 10s
+    develop:
+      watch:
+        - path: ./html
+          action: rebuild 
+        - path: ./nginx
+          action: rebuild
   
   # Dotnet ODNS-API application
   dotnet_app:
@@ -40,7 +52,12 @@ services:
       - odnsapi_network
       - postgresdb_network
     depends_on:
-      - postgres_db
+      postgres_db:
+        condition: service_healthy
+    develop:
+      watch:
+        - path: ./odns-api
+          action: rebuild
 
   # Postgresql database used by the API
   # All the ODNS data goes here
@@ -58,6 +75,11 @@ services:
     restart: always
     networks:
       - postgresdb_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 30s
+      retries: 5
+      start_period: 20s
 
   # PGAdmin to configure database -- runs on localhost to allow access via sshtunnel
   pgadmin:
@@ -81,13 +103,23 @@ services:
     container_name: data_importer
     restart: "no" 
     volumes:
-      - samba_data:/data:rw  # Mount Samba share
+      - odns_data:/data:rw  # Mount Samba share
       - data_importer_tmp:/tmp
       - ./logs:/logs
     networks:
       - postgresdb_network
+    healthcheck:
+      test: ["CMD", "python", "dataimporter.py", "--check-health"]
+      interval: 1m
+      retries: 3
+      start_period: 20s
+    develop:
+      watch:
+        - path: ./odns-dataimporter
+          action: rebuild
     depends_on:
-      - postgres_db
+      postgres_db:
+        condition: service_healthy
 
   # Ofelia scheduler that runs the data importer in the given interval
   scheduler:
