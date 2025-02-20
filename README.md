@@ -11,8 +11,21 @@ to also clone the submodules, otherwise it won't work without further steps.
 
 ## Setup
 1. Clone repository
-2. Rename `.env.template` into `.env` and add proper values
-3. Run `sudo docker compose up`
+2. Rename `.env.template` into `.env` and adjust connection values
+3. Rename `config.ini.template` into `config.ini` and adjust connection values
+4. Run `sudo docker compose up`
+
+### Production Use
+By default, nginx is configured to run locally and is accessible via localhost/127.0.0.1.
+To change that edit the `docker-comose.yml` and change the mounted volume from 
+
+`./nginx/odnsapi.dev.conf:`
+
+to
+
+`./nginx/odnsapi.prod.conf:`
+
+Finally, adjust `./nginx/odnsapi.dev.conf` to your needs.
 
 ## Teardown
 There is a teardown script which you can run with

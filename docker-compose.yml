@@ -20,7 +20,8 @@ services:
       # (also moving .env_file up did not do the trick)
       - ${CERTIFICATE_DIR}:/etc/letsencrypt:ro
       # NGINX config to serve the ODNS-API
-      - ./nginx/odnsapi.conf:/etc/nginx/conf.d/odnsapi.conf:ro
+      # use odnsapi.prod.conf for ssl and domain name
+      - ./nginx/odnsapi.dev.conf:/etc/nginx/conf.d/odnsapi.conf:ro
     restart: always
     depends_on:
       dotnet_app:
