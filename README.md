@@ -17,7 +17,7 @@ to also clone the submodules, otherwise it won't work without further steps.
 
 ### Production Use
 By default, nginx is configured to run locally and is accessible via localhost/127.0.0.1.
-To change that edit the `docker-comose.yml` and change the mounted volume from 
+To change that, edit the `docker-compose.yml` and change the mounted volume of the nginx_web service from 
 
 `./nginx/odnsapi.dev.conf:`
 
@@ -25,7 +25,7 @@ to
 
 `./nginx/odnsapi.prod.conf:`
 
-Finally, adjust `./nginx/odnsapi.dev.conf` to your needs.
+Finally, adjust `./nginx/odnsapi.prod.conf` to your needs.
 
 ## Teardown
 There is a teardown script which you can run with
