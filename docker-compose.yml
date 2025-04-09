@@ -21,7 +21,7 @@ services:
       - ${CERTIFICATE_DIR}:/etc/letsencrypt:ro
       # NGINX config to serve the ODNS-API
       # use odnsapi.prod.conf for ssl and domain name
-      - ./nginx/odnsapi.dev.conf:/etc/nginx/conf.d/odnsapi.conf:ro
+      - ./nginx/odnsapi.prod.conf:/etc/nginx/conf.d/odnsapi.conf:ro
     restart: always
     networks:
       - frontend_network
@@ -118,23 +118,6 @@ services:
     depends_on:
       postgres_db:
         condition: service_healthy
-
-  # Ofelia scheduler that runs the data importer in the given interval
-  scheduler:
-    image: mcuadros/ofelia:0.3
-    container_name: ofelia_scheduler
-    restart: always 
-    depends_on:
-      - data_importer
-    networks:
-      - postgresdb_network
-    command: daemon --docker
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    labels:
-      ofelia.job-run.data_importer.schedule: "0 0 * * 2"
-      ofelia.job-run.data_importer.container: "data_importer"
-      ofelia.job-run.data_importer.command: "python dataimporter.py"
 
 networks:
   # Exposed to the public -- in use by nginx
