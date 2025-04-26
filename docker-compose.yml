@@ -58,7 +58,7 @@ services:
           action: rebuild
     volumes:
       # Logs
-      - /app/logs:/var/log/odnsapi
+      - ./logs/odnsapi:/app/logs
 
   # Postgresql database used by the API
   # All the ODNS data goes here
