@@ -41,7 +41,9 @@ services:
   
   # Dotnet ODNS-API application
   dotnet_app:
-    build: "https://github.com/netd-tud/odns-api.git"
+    build:
+      context: ./odns-api
+      dockerfile: Dockerfile
     container_name: dotnet_app
     restart: always
     environment:
