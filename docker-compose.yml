@@ -56,6 +56,9 @@ services:
       watch:
         - path: ./odns-api
           action: rebuild
+    volumes:
+      # Logs
+      - /app/logs:/var/log/odnsapi
 
   # Postgresql database used by the API
   # All the ODNS data goes here
