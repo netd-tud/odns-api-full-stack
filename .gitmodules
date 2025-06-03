@@ -4,3 +4,7 @@
 [submodule "odns-dataimporter"]
 	path = odns-dataimporter
 	url = https://github.com/netd-tud/odns-dataimporter.git
+[submodule "ipinfos"]
+	path = ipinfos
+	url = https://github.com/netd-tud/ipinfos.git
+	branch = http_api
