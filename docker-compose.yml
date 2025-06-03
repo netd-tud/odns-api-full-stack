@@ -124,6 +124,71 @@ services:
       postgres_db:
         condition: service_healthy
 
+  telegraf:
+    image: telegraf:1.29
+    restart: always
+    volumes:
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    depends_on:
+      - influxdb
+    networks:
+      - observability
+    ports:
+      - "4317:4317"  # OTLP gRPC
+      - "4318:4318"  # OTLP HTTP
+
+  influxdb:
+    image: influxdb:2.7
+    restart: always
+    ports:
+      - "8086:8086"
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=adminpass
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=my-secret-token
+      - DOCKER_INFLUXDB_INIT_ORG=my-org
+      - DOCKER_INFLUXDB_INIT_BUCKET=my-bucket
+    networks:
+      - observability
+    volumes:
+      - influxdb-data:/var/lib/influxdb2
+
+  grafana:
+    image: grafana/grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - influxdb
+    networks:
+      - observability
+      - local_network
+    volumes:
+      #- grafana-data:/var/lib/grafana
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    
+  geoapi:
+    build:
+      context: ./ipinfos
+      dockerfile: Dockerfile
+    ports:
+      - "8123:8123"
+    restart: on-failure  # or 'on-failure'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8123/health"]
+      interval: 30s
+      timeout: 15s
+      retries: 2
+    networks:
+      - observability
+
+
+
 networks:
   # Exposed to the public -- in use by nginx
   frontend_network:
@@ -143,6 +208,10 @@ networks:
     driver: bridge
     driver_opts:
       com.docker.network.bridge.host_binding_ipv4: "127.0.0.1"
+  # Network for observability
+  observability:
+    driver: bridge
+    internal: true 
 
 volumes:
   # Mount shared drive for data importer
@@ -155,3 +224,5 @@ volumes:
   # Volume for postgres db
   postgres_data:
   data_importer_tmp:
+  # InfluxDB
+  influxdb-data:
