@@ -51,6 +51,7 @@ services:
     networks:
       - odnsapi_network
       - postgresdb_network
+      - observability
     depends_on:
       postgres_db:
         condition: service_healthy
