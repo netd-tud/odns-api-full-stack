@@ -16,6 +16,8 @@ services:
     depends_on:
       postgres_db:
         condition: service_healthy
+      data_importer:
+        condition: service_completed_successfully
     develop:
       watch:
         - path: ./odns-api
