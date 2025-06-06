@@ -1,0 +1,25 @@
+services:
+
+  # Dotnet ODNS-API application
+  dotnet_app:
+    build:
+      context: ./odns-api
+      dockerfile: Dockerfile
+    container_name: dotnet_app
+    restart: always
+    environment:
+      - Database:ConnectionString=Host=postgres_db;Port=5432;Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};Database=${POSTGRES_DB};Search Path=${POSTGRES_DB};Pooling=true;MinPoolSize=1;MaxPoolSize=100;Connection Idle Lifetime=20;ApplicationName=odnsapi;Timeout=500;CommandTimeout=500;Include Error Detail=true;
+    networks:
+      - odnsapi_network
+      - postgresdb_network
+      - observability
+    depends_on:
+      postgres_db:
+        condition: service_healthy
+    develop:
+      watch:
+        - path: ./odns-api
+          action: rebuild
+    volumes:
+      # Logs
+      - ./logs/odnsapi:/app/logs

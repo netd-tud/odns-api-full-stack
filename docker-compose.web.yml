@@ -1,0 +1,34 @@
+services:
+  web:
+    # Stable release!
+    image: nginx:1.26.3
+    container_name: nginx_web
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      # Static html page goes in here
+      - ./html:/usr/share/nginx/html:ro
+      # Mount folder for SSL certificates
+      # Mounting point is in .env (variable replacement does not work with the env_file option)
+      # (also moving .env_file up did not do the trick)
+      - ${CERTIFICATE_DIR}:/etc/letsencrypt:ro
+      # NGINX config to serve the ODNS-API
+      # use odnsapi.prod.conf for ssl and domain name
+      - ./nginx/odnsapi.prod.conf:/etc/nginx/conf.d/odnsapi.conf:ro
+    restart: always
+    networks:
+      - frontend_network
+      - odnsapi_network
+      - postgresdb_network
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 30s
+      retries: 3
+      start_period: 10s
+    develop:
+      watch:
+        - path: ./html
+          action: restart 
+        - path: ./nginx
+          action: restart

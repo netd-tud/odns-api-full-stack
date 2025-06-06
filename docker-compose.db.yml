@@ -1,0 +1,36 @@
+services:
+  # Postgresql database used by the API
+  # All the ODNS data goes here
+  postgres_db:
+    image: postgres:16
+    container_name: postgres_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres-init:/docker-entrypoint-initdb.d:ro
+      #- ./postgresql.conf:/etc/postgresql/postgresql.conf
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    restart: always
+    networks:
+      - postgresdb_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 30s
+      retries: 5
+      start_period: 20s
+
+  # PGAdmin to configure database -- runs on localhost to allow access via sshtunnel
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    ports:
+      - "5050:80"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    restart: always
+    networks:
+      - local_network 
+      - postgresdb_network

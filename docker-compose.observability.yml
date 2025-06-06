@@ -1,0 +1,64 @@
+services:
+  telegraf:
+    image: telegraf:1.29
+    restart: always
+    volumes:
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    depends_on:
+      - influxdb
+    networks:
+      - observability
+    ports:
+      - "4317:4317"  # OTLP gRPC
+      - "4318:4318"  # OTLP HTTP
+
+  influxdb:
+    image: influxdb:2.7
+    restart: always
+    ports:
+      - "8086:8086"
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=${INFLUXDB_INIT_USERNAME}
+      - DOCKER_INFLUXDB_INIT_PASSWORD=${INFLUXDB_INIT_PASSWORD}
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=${INFLUXDB_INIT_ADMIN_TOKEN}
+      - DOCKER_INFLUXDB_INIT_ORG=my-org
+      - DOCKER_INFLUXDB_INIT_BUCKET=my-bucket
+      #- DOCKER_INFLUXDB_INIT_RETENTION=1w
+    networks:
+      - observability
+    volumes:
+      - influxdb-data:/var/lib/influxdb2
+
+  grafana:
+    image: grafana/grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GF_ADMIN_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_ADMIN_PASSWORD}
+    depends_on:
+      - influxdb
+    networks:
+      - observability
+      - local_network
+    volumes:
+      #- grafana-data:/var/lib/grafana
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    
+  geoapi:
+    build:
+      context: ./ipinfos
+      dockerfile: Dockerfile
+    ports:
+      - "8123:8123"
+    restart: on-failure  # or 'on-failure'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8123/health"]
+      interval: 30s
+      timeout: 15s
+      retries: 2
+    networks:
+      - observability

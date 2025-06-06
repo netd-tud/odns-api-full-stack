@@ -1,0 +1,26 @@
+services:
+  # Container for importing odns data into postgrs db
+  data_importer:
+    build:
+      context: ./odns-dataimporter
+      dockerfile: Dockerfile
+    container_name: data_importer
+    restart: "no" 
+    volumes:
+      - odns_data:/data:rw  # Mount Samba share
+      - data_importer_tmp:/tmp
+      - ./logs:/logs
+    networks:
+      - postgresdb_network
+    healthcheck:
+      test: ["CMD", "python", "dataimporter.py", "--check-health"]
+      interval: 1m
+      retries: 3
+      start_period: 20s
+    develop:
+      watch:
+        - path: ./odns-dataimporter
+          action: rebuild
+    depends_on:
+      postgres_db:
+        condition: service_healthy
