@@ -175,7 +175,7 @@
             "pluginVersion": "12.0.0",
             "targets": [
                 {
-                    "query": "from(bucket: \"my-bucket\")\r\n  |> range(start: -24h)\r\n  |> filter(fn: (r) => r._measurement == \"odns_requests\" \r\n     and r._field == \"counter\" and\r\n     r.route == \"GetDnsEntries\" and\r\n     exists r.lookup\r\n    )\r\n  |> group(columns: [\"lookup\"])\r\n  |> count()\r\n  |> group()",
+                    "query": "from(bucket: \"my-bucket\")\r\n  |> range(start: -30d)\r\n  |> filter(fn: (r) => r._measurement == \"odns_requests\" \r\n     and r._field == \"counter\" and\r\n     r.route == \"GetDnsEntries\" and\r\n     exists r.lookup\r\n    )\r\n  |> group(columns: [\"lookup\"])\r\n  |> count()\r\n  |> group()",
                     "refId": "A"
                 }
             ],
