@@ -51,7 +51,7 @@
         <div class="row px-3 mb-3 align-items-stretch">
             <div class="col-sm-12">
                 <p class="fs-4 font-monospace text-justify">
-                <b>2025-05-01:</b> Released API version <b>1.0</b>.
+                <b>2025-07-31:</b> Released API version <b>2.0</b>.
                 <br />
                 </p>
             </div>
@@ -91,8 +91,9 @@
     <div class="col-sm-12">
         <div class="fancy-code-box" id="codeSnippet">
 <pre><code class="language-bash">curl -X 'POST' \
-  'https://odns-data.netd.cs.tu-dresden.de/api/v1/ODNSQuery/GetDnsEntries' \
+  'https://odns-data.netd.cs.tu-dresden.de/api/v2/ODNSQuery/GetDnsEntries' \
   -H 'accept: text/plain' \
+  -H 'X-API-KEY: YOUR_API_KEY' \
   -H 'Content-Type: application/json' \
   -d '{
   "pagination": {
