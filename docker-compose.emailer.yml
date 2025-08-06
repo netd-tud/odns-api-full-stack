@@ -1,0 +1,19 @@
+services:
+  # Container for sending api keys by email from odns postgres db
+  api_key_emailer:
+    build:
+      context: ./odns-apikey-emailer
+      dockerfile: Dockerfile
+    container_name: api_key_emailer
+    restart: "no"
+    volumes:
+      - ./logs/api_key_emailer:/logs
+    networks:
+      - postgresdb_network
+    develop:
+      watch:
+        - path: ./odns-apikey-emailer
+          action: rebuild
+    depends_on:
+      postgres_db:
+        condition: service_healthy
