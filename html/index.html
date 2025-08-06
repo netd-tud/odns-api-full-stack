@@ -114,6 +114,47 @@
     </div>
 </div>
     </div>
+    <!-- API Key Request Form -->
+<div class="row mt-5">
+  <div class="col-sm-12">
+    <h5 class="fw-bold mb-3">Request an API Key</h5>
+    <form id="apiKeyForm" class="p-3 border rounded bg-white shadow-sm">
+      <div class="mb-3">
+        <label for="full_name" class="form-label">Full Name</label>
+        <input type="text" class="form-control" id="full_name" name="full_name" required>
+      </div>
+      <div class="mb-3">
+        <label for="affiliation" class="form-label">Affiliation</label>
+        <input type="text" class="form-control" id="affiliation" name="affiliation" required>
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" name="email" required>
+      </div>
+      <div class="mb-3">
+        <label for="purpose" class="form-label">Purpose</label>
+        <input type="text" class="form-control" id="purpose" name="purpose" required>
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Submit</button>
+    </form>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="responseModal" tabindex="-1" aria-labelledby="responseModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="responseModalLabel">API Response</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="modalMessage">
+        <!-- Message will be injected here -->
+      </div>
+    </div>
+  </div>
+</div>
+
 </main>
 <script>
     function copyToClipboard() {
@@ -125,6 +166,8 @@
         });
     }
 </script>
+
+
 <main id="about" class="row row-cols-sm-1 px-3 mb-3 mt-5">
     <div class="box h-100 w-100">
         <div class="box-title">Contact And Credit</div>
@@ -167,6 +210,48 @@
         </footer>
     <script src=/assets/js/bootstrap.bundle.min.js></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+
+    <script>
+  document.getElementById('apiKeyForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const data = {
+      full_name: form.full_name.value,
+      affiliation: form.affiliation.value,
+      email: form.email.value,
+      purpose: form.purpose.value
+    };
+
+    try {
+      const response = await fetch('http://localhost:5204/api/v2/ODNSQuery/RequestApiKey', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'text/plain'
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (!response.ok) throw new Error('Network error');
+
+      const text = await response.text();
+      const json = JSON.parse(text);
+      const message = json?.statusCode?.message || 'Unexpected response.';
+
+      showModal(message);
+    } catch (err) {
+      showModal('Error: ' + err.message);
+    }
+  });
+
+  function showModal(message) {
+    const modalMessage = document.getElementById('modalMessage');
+    modalMessage.textContent = message;
+    const modal = new bootstrap.Modal(document.getElementById('responseModal'));
+    modal.show();
+  }
+</script>
 </body>
 
 </html>
