@@ -25,3 +25,15 @@ CREATE TABLE IF NOT EXISTS odns.dns_entries (
     scan_date date DEFAULT CURRENT_DATE NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS odns.api_keys (
+	id serial4 NOT NULL,
+	api_key text DEFAULT gen_random_uuid() NOT NULL,
+	full_name varchar(255) NULL,
+	affiliation varchar(255) NULL,
+	email varchar(255) NOT NULL,
+	purpose text NULL,
+	created_at timestamp DEFAULT CURRENT_TIMESTAMP NULL,
+	is_active bool DEFAULT true NULL,
+	is_processed bool DEFAULT false NULL,
+	CONSTRAINT api_keys_pkey PRIMARY KEY (id)
+);

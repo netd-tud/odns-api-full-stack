@@ -8,3 +8,6 @@
 	path = ipinfos
 	url = https://github.com/netd-tud/ipinfos.git
 	branch = http_api
+[submodule "odns-apikey-emailer"]
+	path = odns-apikey-emailer
+	url = https://github.com/netd-tud/odns-apikey-emailer.git
