@@ -6,6 +6,8 @@ services:
       dockerfile: Dockerfile
     container_name: api_key_emailer
     restart: "no"
+    env_file:
+      - .env
     volumes:
       - ./logs/api_key_emailer:/logs
     networks:
