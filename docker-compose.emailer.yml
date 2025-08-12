@@ -12,6 +12,7 @@ services:
       - ./logs/api_key_emailer:/logs
     networks:
       - postgresdb_network
+      - frontend_network
     develop:
       watch:
         - path: ./odns-apikey-emailer
