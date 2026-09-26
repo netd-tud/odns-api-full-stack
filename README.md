@@ -35,6 +35,29 @@ There is a teardown script which you can run with
 which also removes the postgres volume/data completely -- so be careful.
 Removing that volume is necessary when adding new scripts to `postgres-init/` 
 These scripts will only run once on database creation as they are mounted to `docker-entrypoint-initdb.d/`
+
+## Latest Dataset Downloads
+
+The importer publishes the latest TCP and UDP scans as CSV, CSV compressed with
+Zstandard, and Parquet. Downloads require an API key and are available through:
+
+`GET /api/v2/ODNSQuery/DownloadLatest?protocol=tcp&format=csv.zst`
+
+Valid protocols are `tcp` and `udp`; valid formats are `csv`, `csv.zst`, and
+`parquet`. The API authorizes the request and nginx serves the published file
+from its internal download location.
+
+### Updating an Existing Database
+
+Postgres initialization scripts do not run again for an existing data volume.
+Apply the updated query function and the idempotent indexes before deploying the
+new API:
+
+```sh
+docker compose -f docker-compose.yml -f docker-compose.db.yml exec -T postgres_db sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -f /docker-entrypoint-initdb.d/02-create-get-dns-entries-function.sql'
+docker compose -f docker-compose.yml -f docker-compose.db.yml exec -T postgres_db sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -f /docker-entrypoint-initdb.d/05-create-performance-indexes.sql'
+```
+
 ## ToDo List
 - [ ] Makefile integration
 - [ ] Healthchecks for .Net app

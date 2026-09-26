@@ -23,3 +23,5 @@ services:
     volumes:
       # Logs
       - ./logs/odnsapi:/app/logs
+      # Published datasets are authorized by the API and served by nginx.
+      - odns_data:/data:ro

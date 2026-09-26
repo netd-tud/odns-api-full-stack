@@ -16,6 +16,8 @@ services:
       # NGINX config to serve the ODNS-API
       # use odnsapi.prod.conf for ssl and domain name
       - ./nginx/odnsapi.prod.conf:/etc/nginx/conf.d/odnsapi.conf:ro
+      # Internal-only dataset downloads.
+      - odns_data:/data:ro
     restart: always
     networks:
       - frontend_network

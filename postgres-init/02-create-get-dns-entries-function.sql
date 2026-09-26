@@ -12,10 +12,12 @@ declare
 	sort jsonb;
 	latest bool;
 	latest_date date;
+	selected_columns text;
 	BEGIN
 		entryfilter := null;
 		pagination := null;
 		sort := null;
+		selected_columns := '*';
 		query := 'SELECT jsonb_agg(t) FROM (SELECT * FROM odns.dns_entries WHERE true';
 		innerquery := 'FROM odns.dns_entries WHERE true';
 
@@ -31,7 +33,7 @@ declare
 					limit 1
 				);
 				raise notice  'latest date: %', latest_date::text;
-				IF latest_date != null THEN
+				IF latest_date IS NOT NULL THEN
 					innerquery := innerquery || ' AND scan_date = ''' || latest_date || '''';
 				END IF;
 			END IF;
@@ -143,6 +145,27 @@ declare
 		execute ('SELECT COUNT(1) ' ||innerquery)  into total;
 		raise notice  'total is : %', total;
 
+		-- Select only fields requested by v2. Values are additionally whitelisted
+		-- here even though the API maps them to database column names.
+		IF p_input ? 'fieldsToReturn'
+			AND jsonb_typeof(p_input -> 'fieldsToReturn') = 'array'
+			AND jsonb_array_length(p_input -> 'fieldsToReturn') > 0 THEN
+			SELECT string_agg(quote_ident(field_name), ', ')
+			INTO selected_columns
+			FROM jsonb_array_elements_text(p_input -> 'fieldsToReturn') AS requested(field_name)
+			WHERE field_name = ANY (ARRAY[
+				'protocol', 'ip_request', 'ip_response', 'a_record',
+				'timestamp_request', 'timestamp_response', 'response_type',
+				'country_request', 'country_response', 'asn_request', 'asn_response',
+				'prefix_request', 'prefix_response', 'org_request', 'org_response',
+				'country_arecord', 'asn_arecord', 'prefix_arecord', 'org_arecord',
+				'scan_date'
+			]);
+			IF selected_columns IS NULL THEN
+				selected_columns := '*';
+			END IF;
+		END IF;
+
 		-- =============== Sorting ====================
 
 		IF p_input ? 'sort' THEN
@@ -164,7 +187,7 @@ declare
 
 		-- =============== Final query =======================
 
-		query := 'SELECT jsonb_agg(t) FROM ( '|| 'SELECT * ' || innerquery || ') t';
+		query := 'SELECT jsonb_agg(t) FROM (SELECT ' || selected_columns || ' ' || innerquery || ') t';
 		raise notice  'End Query: %', query;
 
 
@@ -189,4 +212,3 @@ declare
 
 	END;
 $$ LANGUAGE plpgsql;
-
