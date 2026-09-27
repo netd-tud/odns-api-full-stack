@@ -1,0 +1,77 @@
+apiVersion: 1
+
+groups:
+  - orgId: 1
+    name: ODNS scan freshness
+    folder: Auto
+    interval: 1h
+    rules:
+      - uid: odns-scan-date-stale
+        title: ODNS scan date older than 7 days
+        condition: C
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 21600
+              to: 0
+            datasourceUid: influxdb-ds
+            model:
+              datasource:
+                type: influxdb
+                uid: influxdb-ds
+              query: |
+                from(bucket: "my-bucket")
+                  |> range(start: -6h)
+                  |> filter(fn: (r) => r._measurement == "odns_db" and r._field == "latest_scan_age_days")
+                  |> last()
+              refId: A
+              intervalMs: 1000
+              maxDataPoints: 43200
+          - refId: B
+            relativeTimeRange:
+              from: 21600
+              to: 0
+            datasourceUid: __expr__
+            model:
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: A
+              reducer: last
+              refId: B
+              type: reduce
+          - refId: C
+            relativeTimeRange:
+              from: 21600
+              to: 0
+            datasourceUid: __expr__
+            model:
+              conditions:
+                - evaluator:
+                    params:
+                      - 7
+                    type: gt
+                  operator:
+                    type: and
+                  query:
+                    params:
+                      - C
+                  reducer:
+                    params: []
+                    type: last
+                  type: query
+              datasource:
+                type: __expr__
+                uid: __expr__
+              expression: B
+              refId: C
+              type: threshold
+        noDataState: Alerting
+        execErrState: Error
+        for: 15m
+        annotations:
+          summary: ODNS latest scan date is older than 7 days
+          description: The latest scan_date reported by Postgres has been stale for more than 7 days.
+        labels:
+          severity: warning
+        isPaused: false

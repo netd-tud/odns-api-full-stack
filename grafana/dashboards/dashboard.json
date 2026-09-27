@@ -27,6 +27,254 @@
                 "type": "influxdb",
                 "uid": "influxdb-ds"
             },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green"
+                            }
+                        ]
+                    },
+                    "unit": "short"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "x": 0,
+                "y": 0,
+                "w": 6,
+                "h": 4
+            },
+            "id": 4,
+            "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+            },
+            "pluginVersion": "12.0.0",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "influxdb-ds"
+                    },
+                    "query": "from(bucket: \"my-bucket\")\n  |> range(start: -6h)\n  |> filter(fn: (r) => r._measurement == \"odns_db\" and r._field == \"active_api_keys\")\n  |> last()",
+                    "refId": "A"
+                }
+            ],
+            "title": "Active API Keys",
+            "type": "stat"
+        },
+        {
+            "datasource": {
+                "type": "influxdb",
+                "uid": "influxdb-ds"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green"
+                            }
+                        ]
+                    },
+                    "unit": "short"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "x": 6,
+                "y": 0,
+                "w": 6,
+                "h": 4
+            },
+            "id": 5,
+            "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+            },
+            "pluginVersion": "12.0.0",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "influxdb-ds"
+                    },
+                    "query": "from(bucket: \"my-bucket\")\n  |> range(start: -6h)\n  |> filter(fn: (r) => r._measurement == \"odns_db\" and r._field == \"total_api_keys\")\n  |> last()",
+                    "refId": "A"
+                }
+            ],
+            "title": "Total API Keys",
+            "type": "stat"
+        },
+        {
+            "datasource": {
+                "type": "influxdb",
+                "uid": "influxdb-ds"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green"
+                            },
+                            {
+                                "color": "orange",
+                                "value": 5
+                            },
+                            {
+                                "color": "red",
+                                "value": 7
+                            }
+                        ]
+                    },
+                    "unit": "d"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "x": 12,
+                "y": 0,
+                "w": 6,
+                "h": 4
+            },
+            "id": 6,
+            "options": {
+                "colorMode": "background",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+            },
+            "pluginVersion": "12.0.0",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "influxdb-ds"
+                    },
+                    "query": "from(bucket: \"my-bucket\")\n  |> range(start: -6h)\n  |> filter(fn: (r) => r._measurement == \"odns_db\" and r._field == \"latest_scan_age_days\")\n  |> last()",
+                    "refId": "A"
+                }
+            ],
+            "title": "Latest Scan Age",
+            "type": "stat"
+        },
+        {
+            "datasource": {
+                "type": "influxdb",
+                "uid": "influxdb-ds"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green"
+                            }
+                        ]
+                    },
+                    "unit": "dateTimeAsIso"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "x": 18,
+                "y": 0,
+                "w": 6,
+                "h": 4
+            },
+            "id": 7,
+            "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "fields": "",
+                    "values": false
+                },
+                "showPercentChange": false,
+                "textMode": "auto",
+                "wideLayout": true
+            },
+            "pluginVersion": "12.0.0",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "influxdb-ds"
+                    },
+                    "query": "from(bucket: \"my-bucket\")\n  |> range(start: -6h)\n  |> filter(fn: (r) => r._measurement == \"odns_db\" and r._field == \"latest_scan_date_unix\")\n  |> last()\n  |> map(fn: (r) => ({ r with _value: r._value * 1000 }))",
+                    "refId": "A"
+                }
+            ],
+            "title": "Latest Scan Date",
+            "type": "stat"
+        },
+        {
+            "datasource": {
+                "type": "influxdb",
+                "uid": "influxdb-ds"
+            },
             "description": "request per second tot he odns api",
             "fieldConfig": {
                 "defaults": {
@@ -84,10 +332,10 @@
                 "overrides": []
             },
             "gridPos": {
-                "h": 8,
-                "w": 12,
                 "x": 0,
-                "y": 0
+                "y": 4,
+                "w": 12,
+                "h": 16
             },
             "id": 1,
             "options": {
@@ -95,7 +343,7 @@
                     "calcs": [],
                     "displayMode": "list",
                     "placement": "bottom",
-                    "showLegend": false
+                    "showLegend": true
                 },
                 "tooltip": {
                     "hideZeros": false,
@@ -108,7 +356,7 @@
                 {
                     "datasource": {
                         "type": "influxdb",
-                        "uid": "benubxtut43k0e"
+                        "uid": "influxdb-ds"
                     },
                     "query": "from(bucket: \"my-bucket\")\r\n  |> range(start: -60m)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"odns_requests\" and\r\n    r._field == \"counter\" and\r\n    r.route == \"GetDnsEntries\"\r\n  )\r\n  |> group()\r\n  |> sort(columns: [\"_time\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> yield(name: \"requests_per_second\")",
                     "refId": "A"
@@ -139,10 +387,10 @@
                 "overrides": []
             },
             "gridPos": {
-                "h": 8,
+                "x": 0,
+                "y": 20,
                 "w": 12,
-                "x": 12,
-                "y": 0
+                "h": 8
             },
             "id": 3,
             "options": {
@@ -176,11 +424,107 @@
             "targets": [
                 {
                     "query": "from(bucket: \"my-bucket\")\r\n  |> range(start: -30d)\r\n  |> filter(fn: (r) => r._measurement == \"odns_requests\" \r\n     and r._field == \"counter\" and\r\n     r.route == \"GetDnsEntries\" and\r\n     exists r.lookup\r\n    )\r\n  |> group(columns: [\"lookup\"])\r\n  |> count()\r\n  |> group()",
-                    "refId": "A"
+                    "refId": "A",
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "influxdb-ds"
+                    }
                 }
             ],
             "title": "Countries",
             "type": "piechart"
+        },
+        {
+            "datasource": {
+                "type": "influxdb",
+                "uid": "influxdb-ds"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisBorderShow": false,
+                        "axisCenteredZero": false,
+                        "axisColorMode": "text",
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "barWidthFactor": 0.6,
+                        "drawStyle": "bars",
+                        "fillOpacity": 10,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "insertNulls": false,
+                        "lineInterpolation": "linear",
+                        "lineWidth": 2,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": true,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green"
+                            }
+                        ]
+                    },
+                    "unit": "short"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "x": 0,
+                "y": 28,
+                "w": 12,
+                "h": 8
+            },
+            "id": 8,
+            "options": {
+                "legend": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "displayMode": "list",
+                    "placement": "bottom",
+                    "showLegend": true
+                },
+                "tooltip": {
+                    "hideZeros": false,
+                    "mode": "multi",
+                    "sort": "none"
+                }
+            },
+            "pluginVersion": "12.0.0",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "influxdb-ds"
+                    },
+                    "query": "from(bucket: \"my-bucket\")\n  |> range(start: -24h)\n  |> filter(fn: (r) => r._measurement == \"odns_api_key_requests\" and r._field == \"counter\")\n  |> group(columns: [\"api_key_id\"])\n  |> count()\n  |> map(fn: (r) => ({ r with _field: \"api_key_\" + r.api_key_id }))\n  |> group()",
+                    "refId": "A"
+                }
+            ],
+            "title": "Requests By API Key",
+            "type": "barchart"
         },
         {
             "datasource": {
@@ -216,10 +560,10 @@
                 "overrides": []
             },
             "gridPos": {
-                "h": 8,
+                "x": 12,
+                "y": 4,
                 "w": 12,
-                "x": 6,
-                "y": 8
+                "h": 32
             },
             "id": 2,
             "options": {
@@ -239,8 +583,8 @@
                 "layers": [
                     {
                         "config": {
-                            "blur": 15,
-                            "radius": 5,
+                            "blur": 18,
+                            "radius": 8,
                             "weight": {
                                 "fixed": 1,
                                 "max": 1,
@@ -275,11 +619,300 @@
             "targets": [
                 {
                     "query": "from(bucket: \"my-bucket\")\r\n  |> range(start: -24h)\r\n  |> filter(fn: (r) =>\r\n    r._measurement == \"odns_requests\" and\r\n    r._field == \"counter\" and\r\n    r.route == \"GetDnsEntries\" and\r\n    exists r.lookup\r\n  )\r\n  |> map(fn: (r) => ({ r with location: r.lookup }))\r\n  |> keep(columns: [\"_time\", \"_value\", \"location\"])",
+                    "refId": "A",
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "influxdb-ds"
+                    }
+                }
+            ],
+            "title": "ODNS Requests World Map",
+            "type": "geomap"
+        },
+        {
+            "datasource": {
+                "type": "influxdb",
+                "uid": "influxdb-ds"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisBorderShow": false,
+                        "axisCenteredZero": false,
+                        "axisColorMode": "text",
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "barWidthFactor": 0.6,
+                        "drawStyle": "line",
+                        "fillOpacity": 10,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "insertNulls": false,
+                        "lineInterpolation": "linear",
+                        "lineWidth": 2,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": true,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green"
+                            }
+                        ]
+                    },
+                    "unit": "reqps"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "x": 0,
+                "y": 36,
+                "w": 24,
+                "h": 8
+            },
+            "id": 9,
+            "options": {
+                "legend": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "displayMode": "list",
+                    "placement": "bottom",
+                    "showLegend": true
+                },
+                "tooltip": {
+                    "hideZeros": false,
+                    "mode": "multi",
+                    "sort": "none"
+                }
+            },
+            "pluginVersion": "12.0.0",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "influxdb-ds"
+                    },
+                    "query": "from(bucket: \"my-bucket\")\n  |> range(start: -6h)\n  |> filter(fn: (r) => r._measurement == \"nginx_access\" and r._field == \"request_time\")\n  |> aggregateWindow(every: 1m, fn: count, createEmpty: false)\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) / 60.0 }))\n  |> yield(name: \"nginx_rps\")",
                     "refId": "A"
                 }
             ],
-            "title": "ODNS Requests Heatmap",
-            "type": "geomap"
+            "title": "Nginx Requests Per Second",
+            "type": "timeseries"
+        },
+        {
+            "datasource": {
+                "type": "influxdb",
+                "uid": "influxdb-ds"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisBorderShow": false,
+                        "axisCenteredZero": false,
+                        "axisColorMode": "text",
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "barWidthFactor": 0.6,
+                        "drawStyle": "line",
+                        "fillOpacity": 12,
+                        "gradientMode": "opacity",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "insertNulls": false,
+                        "lineInterpolation": "smooth",
+                        "lineWidth": 2,
+                        "pointSize": 4,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "never",
+                        "spanNulls": true,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green"
+                            },
+                            {
+                                "color": "orange",
+                                "value": 1
+                            },
+                            {
+                                "color": "red",
+                                "value": 3
+                            }
+                        ]
+                    },
+                    "unit": "s"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "x": 0,
+                "y": 44,
+                "w": 24,
+                "h": 8
+            },
+            "id": 11,
+            "options": {
+                "legend": {
+                    "calcs": [
+                        "mean",
+                        "max"
+                    ],
+                    "displayMode": "table",
+                    "placement": "bottom",
+                    "showLegend": true
+                },
+                "tooltip": {
+                    "hideZeros": false,
+                    "mode": "multi",
+                    "sort": "desc"
+                }
+            },
+            "pluginVersion": "12.0.0",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "influxdb-ds"
+                    },
+                    "query": "from(bucket: \"my-bucket\")\n  |> range(start: -24h)\n  |> filter(fn: (r) => r._measurement == \"nginx_access\" and r._field == \"request_time\" and exists r.uri)\n  |> group(columns: [\"uri\"])\n  |> aggregateWindow(every: 5m, fn: mean, createEmpty: false)\n  |> yield(name: \"avg_response_time_by_uri\")",
+                    "refId": "A"
+                }
+            ],
+            "title": "Average Response Time By Query",
+            "type": "timeseries"
+        },
+        {
+            "datasource": {
+                "type": "influxdb",
+                "uid": "influxdb-ds"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisBorderShow": false,
+                        "axisCenteredZero": false,
+                        "axisColorMode": "text",
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "barWidthFactor": 0.6,
+                        "drawStyle": "bars",
+                        "fillOpacity": 10,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "insertNulls": false,
+                        "lineInterpolation": "linear",
+                        "lineWidth": 2,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "auto",
+                        "spanNulls": true,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green"
+                            }
+                        ]
+                    },
+                    "unit": "short"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "x": 0,
+                "y": 52,
+                "w": 24,
+                "h": 8
+            },
+            "id": 10,
+            "options": {
+                "legend": {
+                    "calcs": [
+                        "lastNotNull"
+                    ],
+                    "displayMode": "list",
+                    "placement": "bottom",
+                    "showLegend": true
+                },
+                "tooltip": {
+                    "hideZeros": false,
+                    "mode": "multi",
+                    "sort": "none"
+                }
+            },
+            "pluginVersion": "12.0.0",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "influxdb",
+                        "uid": "influxdb-ds"
+                    },
+                    "query": "from(bucket: \"my-bucket\")\n  |> range(start: -24h)\n  |> filter(fn: (r) => r._measurement == \"nginx_access\" and r._field == \"status_code\")\n  |> group(columns: [\"status\"])\n  |> count()\n  |> map(fn: (r) => ({ r with _field: \"status_\" + r.status }))\n  |> group()",
+                    "refId": "A"
+                }
+            ],
+            "title": "Nginx Status Codes",
+            "type": "barchart"
         }
     ],
     "preload": false,
@@ -296,5 +929,5 @@
     "timezone": "browser",
     "title": "ODNS",
     "uid": "41e7c0a5-e8ec-43bf-93c7-a1d692f37f27",
-    "version": 5
+    "version": 10
 }

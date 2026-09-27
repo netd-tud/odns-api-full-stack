@@ -18,6 +18,8 @@ services:
       - ./nginx/odnsapi.prod.conf:/etc/nginx/conf.d/odnsapi.conf:ro
       # Internal-only dataset downloads.
       - odns_data:/data:ro
+      # Persist nginx logs so Telegraf can analyze the complete mounted log files
+      - ./logs/nginx:/var/log/nginx
     restart: always
     networks:
       - frontend_network

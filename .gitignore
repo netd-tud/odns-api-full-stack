@@ -1,3 +1,6 @@
 .env
 logs/*
 .mypy_cache/
+
+# Runtime files written by the ACME client.
+html/.well-known/acme-challenge/

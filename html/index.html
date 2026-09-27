@@ -51,7 +51,13 @@
         <div class="row px-3 mb-3 align-items-stretch">
             <div class="col-sm-12">
                 <p class="fs-4 font-monospace text-justify">
+                <b>2025-11-25:</b> Removed access to deprecated version <b>1.0</b>.
+                <br />
+                <b style="color: #F8F9FA">2025-11-25:</b> API version <b>2.0</b> is fully backwards compatible.
+                <br />
                 <b>2025-07-31:</b> Released API version <b>2.0</b>.
+                <br />
+                <b>2025-05-01:</b> Released API version <b>1.0</b>.
                 <br />
                 </p>
             </div>
@@ -114,10 +120,12 @@
     </div>
 </div>
     </div>
+</main>
+<main id="about" class="row row-cols-sm-1 px-3 mb-3 mt-5">
+    <div class="box h-100 w-100">
+        <div class="box-title">Request an API Key</div>
     <!-- API Key Request Form -->
-<div class="row mt-5">
   <div class="col-sm-12">
-    <h5 class="fw-bold mb-3">Request an API Key</h5>
     <form id="apiKeyForm" class="p-3 border rounded bg-white shadow-sm">
       <div class="mb-3">
         <label for="full_name" class="form-label">Full Name</label>
@@ -138,7 +146,6 @@
       <button type="submit" class="btn btn-primary w-100">Submit</button>
     </form>
   </div>
-</div>
 
 <!-- Modal -->
 <div class="modal fade" id="responseModal" tabindex="-1" aria-labelledby="responseModalLabel" aria-hidden="true">
@@ -154,8 +161,9 @@
     </div>
   </div>
 </div>
-
+</div>
 </main>
+
 <script>
     function copyToClipboard() {
         const code = document.querySelector("#codeSnippet code").innerText;
