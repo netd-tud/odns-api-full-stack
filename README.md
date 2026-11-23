@@ -13,19 +13,39 @@ to also clone the submodules, otherwise it won't work without further steps.
 1. Clone repository
 2. Rename `.env.template` into `.env` and adjust connection values
 3. Rename `config.ini.template` into `config.ini` and adjust connection values
-4. Run `docker compose up` or to automatically rebuild on changes `docker compose up --watch`
+4. Run `./start-all.sh`
 
 ### Production Use
-By default, nginx is configured to run locally and is accessible via localhost/127.0.0.1.
-To change that, edit the `docker-compose.yml` and change the mounted volume of the nginx_web service from 
+`./start-all.sh` includes the `web` (Nginx) and `certbot` services. The domain
+`odns-data.netd.cs.tu-dresden.de` must point to this host, with ports 80 and 443
+reachable from the internet. Nginx serves the ACME challenge over HTTP and
+loads the certificate when Certbot issues or renews it.
 
-`./nginx/odnsapi.dev.conf:`
+- On an existing host, back up the full `CERTIFICATE_DIR` (default
+  `/etc/letsencrypt`) and keep it mounted so the stack can reuse the existing
+  certificate and renewal state. Free ports 80 and 443 from any host web server
+  before starting the services. Pause host renewal for this certificate during
+  the cutover, and retire it once container renewal succeeds. Check the existing
+  renewal configuration for any hooks that depend on host commands.
+- On a fresh host, set `CERTBOT_EMAIL` in `.env` to register with Let's Encrypt.
+  Keep port 80 reachable for future renewals. HTTPS becomes available after
+  the first certificate has been issued.
 
-to
+To start Nginx and Certbot with their API and database dependencies:
 
-`./nginx/odnsapi.prod.conf:`
+```sh
+docker compose -f docker-compose.yml -f docker-compose.db.yml \
+  -f docker-compose.api.yml -f docker-compose.web.yml up -d web certbot
+```
 
-Finally, adjust `./nginx/odnsapi.prod.conf` to your needs.
+Test renewal against Let's Encrypt staging once a certificate is available:
+
+```sh
+docker compose -f docker-compose.yml -f docker-compose.db.yml \
+  -f docker-compose.api.yml -f docker-compose.web.yml exec certbot \
+  certbot renew --dry-run --cert-name odns-data.netd.cs.tu-dresden.de \
+  --webroot --webroot-path /var/www/certbot --webroot-map '{}' --no-directory-hooks
+```
 
 ## Teardown
 There is a teardown script which you can run with

@@ -1,7 +1,7 @@
 services:
   web:
     # Stable release!
-    image: nginx:1.26.3
+    image: nginx:1.30.7
     container_name: nginx_web
     ports:
       - "80:80"
@@ -10,17 +10,19 @@ services:
       # Static html page goes in here
       - ./html:/usr/share/nginx/html:ro
       # Mount folder for SSL certificates
-      # Mounting point is in .env (variable replacement does not work with the env_file option)
-      # (also moving .env_file up did not do the trick)
-      - ${CERTIFICATE_DIR}:/etc/letsencrypt:ro
-      # NGINX config to serve the ODNS-API
-      # use odnsapi.prod.conf for ssl and domain name
-      - ./nginx/odnsapi.prod.conf:/etc/nginx/conf.d/odnsapi.conf:ro
+      - ${CERTIFICATE_DIR:-/etc/letsencrypt}:/etc/letsencrypt:ro
+      - certbot_webroot:/var/www/certbot:ro
+      # HTTPS is enabled once the certificate is available.
+      - ./nginx/odnsapi.http.conf:/etc/nginx/conf.d/odnsapi-http.conf:ro
+      - ./nginx/odnsapi.prod.conf:/etc/nginx/odnsapi.prod.conf:ro
+      - ./nginx/40-enable-https.sh:/docker-entrypoint.d/40-enable-https.sh:ro
       # Internal-only dataset downloads.
       - odns_data:/data:ro
       # Persist nginx logs so Telegraf can analyze the complete mounted log files
       - ./logs/nginx:/var/log/nginx
     restart: always
+    depends_on:
+      - dotnet_app
     networks:
       - frontend_network
       - odnsapi_network
@@ -36,3 +38,22 @@ services:
           action: restart 
         - path: ./nginx
           action: restart
+
+  certbot:
+    image: certbot/certbot:v5.10.0
+    restart: unless-stopped
+    entrypoint: ["/bin/sh", "/usr/local/bin/renew-certificates.sh"]
+    environment:
+      - CERTBOT_EMAIL=${CERTBOT_EMAIL:-}
+    volumes:
+      - ${CERTIFICATE_DIR:-/etc/letsencrypt}:/etc/letsencrypt
+      - certbot_webroot:/var/www/certbot
+      - ./nginx/renew-certificates.sh:/usr/local/bin/renew-certificates.sh:ro
+    depends_on:
+      web:
+        condition: service_healthy
+    networks:
+      - frontend_network
+
+volumes:
+  certbot_webroot:

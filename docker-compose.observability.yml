@@ -9,6 +9,11 @@ services:
     volumes:
       - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
       - ./logs/nginx:/var/log/nginx:ro
+    logging:
+        driver: local
+        options:
+            max-size: "20m"
+            max-file: "7"
     depends_on:
       - influxdb
     networks:
